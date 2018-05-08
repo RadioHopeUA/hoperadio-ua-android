@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion global_compileSdkVersion
+    buildToolsVersion global_buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion global_minSdkVersion
+        targetSdkVersion global_targetSdkVersion
+        versionCode global_versionCode
+        versionName global_versionName
+        multiDexEnabled true
+    }
+
+    compileOptions {
+        sourceCompatibility global_sourceCompatibility
+        targetCompatibility global_targetCompatibility
+    }
+}
+
+ext {
+    // https://developer.android.com/topic/libraries/support-library/revisions.html
+    APPCOMPAT_VERSION = '27.1.1'
+    // https://bintray.com/google/exoplayer/exoplayer
+    EXOPLAYER_VERSION = '2.7.3'
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    OKHTTP_VERSION = '3.10.0'
+    // https://github.com/mikepenz/Android-Iconics
+    ICONICS_VERSION = '3.0.3'
+    CMD_FONTS_VERSION = '2.0.46.1'
+}
+
+dependencies {
+    api 'com.android.support:multidex:1.0.3'
+    api group: 'com.android.support', name: 'support-v4', version: APPCOMPAT_VERSION
+    api group: 'com.android.support', name: 'appcompat-v7', version: APPCOMPAT_VERSION
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: OKHTTP_VERSION
+    implementation group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: OKHTTP_VERSION
+    implementation group: 'com.google.android.exoplayer', name: 'exoplayer', version: EXOPLAYER_VERSION
+    implementation group: 'com.mikepenz', name: 'iconics-core', ext: 'aar', version: ICONICS_VERSION
+    implementation group: 'com.mikepenz', name: 'iconics-views', ext: 'aar', version: ICONICS_VERSION
+    implementation group: 'com.mikepenz', name: 'community-material-typeface', ext: 'aar', version: CMD_FONTS_VERSION
+    implementation("com.crashlytics.sdk.android:crashlytics:${FABRIC_VERSION}@aar") {
+        transitive = true
+    }
+}

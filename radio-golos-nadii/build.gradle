@@ -1,0 +1,68 @@
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+android {
+    compileSdkVersion global_compileSdkVersion
+    buildToolsVersion global_buildToolsVersion
+
+    lintOptions {
+        abortOnError false
+    }
+
+    defaultConfig {
+        applicationId "ua.hope.radio.golosnadii"
+        minSdkVersion global_minSdkVersion
+        targetSdkVersion global_targetSdkVersion
+        versionCode global_versionCode
+        versionName global_versionName
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    signingConfigs {
+        release {
+            File signFile = project.file("signing/GolosNadii.properties")
+            if (signFile.exists()) {
+                Properties props = new Properties()
+                props.load(new FileInputStream(signFile))
+
+                storeFile project.file("signing/" + props['keystore'])
+                storePassword props['keystore.password']
+                keyAlias props['keyAlias']
+                keyPassword props['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../radio-core/proguard-rules.pro', 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            zipAlignEnabled true
+        }
+    }
+    compileOptions {
+        sourceCompatibility global_sourceCompatibility
+        targetCompatibility global_targetCompatibility
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${project.name}-${variant.name}-${variant.versionName}.${variant.versionCode}.apk"
+        }
+    }
+}
+
+dependencies {
+    implementation project(path: ':radio-core')
+    implementation("com.crashlytics.sdk.android:crashlytics:${FABRIC_VERSION}@aar") {
+        transitive = true
+    }
+}

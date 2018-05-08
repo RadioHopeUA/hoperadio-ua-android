@@ -1,0 +1,39 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'io.fabric.tools:gradle:1.+'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+subprojects {
+    ext.global_compileSdkVersion = 27
+    ext.global_buildToolsVersion = "27.0.3"
+    ext.global_minSdkVersion = 16
+    ext.global_targetSdkVersion = 27
+    ext.global_versionCode = 10
+    ext.global_versionName = "1.1.0"
+    ext.global_sourceCompatibility = JavaVersion.VERSION_1_8
+    ext.global_targetCompatibility = JavaVersion.VERSION_1_8
+    // https://fabric.io/kits/android/crashlytics/install
+    ext.FABRIC_VERSION = '2.9.2'
+}
