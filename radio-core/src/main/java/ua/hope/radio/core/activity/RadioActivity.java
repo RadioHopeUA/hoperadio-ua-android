@@ -50,10 +50,12 @@ public class RadioActivity extends AppCompatActivity {
 
 				@Override
 				public void onMetadataChanged(MediaMetadataCompat metadata) {
-					String artist = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
-					String title = metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE);
-					artistNameText.setText(artist);
-					songNameText.setText(title);
+					if (metadata != null) {
+						String artist = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
+						String title = metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE);
+						artistNameText.setText(artist);
+						songNameText.setText(title);
+					}
 				}
 			};
 	protected AudioService mService;
