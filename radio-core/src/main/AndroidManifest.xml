@@ -1,9 +1,2 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		  package="ua.hope.radio.core"
-		  android:installLocation="auto">
-
-	<application android:allowBackup="true"
-				 android:supportsRtl="false">
-	</application>
-
-</manifest>
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="ua.hope.radio.core"/>

@@ -30,8 +30,8 @@ subprojects {
     ext.global_buildToolsVersion = "27.0.3"
     ext.global_minSdkVersion = 16
     ext.global_targetSdkVersion = 27
-    ext.global_versionCode = 11
-    ext.global_versionName = "1.1.1"
+    ext.global_versionCode = 12
+    ext.global_versionName = "1.1.2"
     ext.global_sourceCompatibility = JavaVersion.VERSION_1_8
     ext.global_targetCompatibility = JavaVersion.VERSION_1_8
     // https://fabric.io/kits/android/crashlytics/install
