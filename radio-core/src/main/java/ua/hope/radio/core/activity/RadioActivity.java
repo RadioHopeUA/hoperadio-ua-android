@@ -199,14 +199,15 @@ public class RadioActivity extends AppCompatActivity {
 		});
 		playButton.setOnClickListener(v -> {
 			int pbState = MediaControllerCompat.getMediaController(this).getPlaybackState().getState();
+			MediaControllerCompat.TransportControls transportControls = MediaControllerCompat.getMediaController(this).getTransportControls();
 			if (pbState == PlaybackStateCompat.STATE_PLAYING) {
 				playButton.setImageResource(mPlayButtonDrawableResId);
 				audioButton.setVisibility(View.INVISIBLE);
-				MediaControllerCompat.getMediaController(this).getTransportControls().pause();
+				transportControls.pause();
 			} else {
 				playButton.setImageResource(mPauseButtonDrawableResId);
 				audioButton.setVisibility(View.VISIBLE);
-				MediaControllerCompat.getMediaController(this).getTransportControls().play();
+				transportControls.play();
 			}
 		});
 		songNameText.setText("");

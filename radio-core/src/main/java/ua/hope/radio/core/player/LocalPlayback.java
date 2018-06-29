@@ -24,7 +24,6 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.FixedTrackSelection;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
@@ -46,9 +45,9 @@ public final class LocalPlayback implements Playback {
 
 	// The volume we set the media player to when we lose audio focus, but are
 	// allowed to reduce the volume instead of stopping playback.
-	public static final float VOLUME_DUCK = 0.2f;
+	private static final float VOLUME_DUCK = 0.2f;
 	// The volume we set the media player when we have audio focus.
-	public static final float VOLUME_NORMAL = 1.0f;
+	private static final float VOLUME_NORMAL = 1.0f;
 	private static final String TAG = LocalPlayback.class.getSimpleName();
 	// we don't have audio focus, and can't duck (play at a low volume)
 	private static final int AUDIO_NO_FOCUS_NO_DUCK = 0;
@@ -60,7 +59,6 @@ public final class LocalPlayback implements Playback {
 
 	private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
 	private static final TrackSelection.Factory ADAPTIVE_FACTORY = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
-	private static final TrackSelection.Factory FIXED_FACTORY = new FixedTrackSelection.Factory();
 
 	private final Context mContext;
 	private final AudioManager mAudioManager;
@@ -262,12 +260,14 @@ public final class LocalPlayback implements Playback {
 	@Override
 	public void selectTrack(int id) {
 		TrackGroupArray trackGroupArray = trackSelector.getCurrentMappedTrackInfo().getTrackGroups(1);
-		trackSelector.clearSelectionOverrides();
+		DefaultTrackSelector.ParametersBuilder parametersBuilder = trackSelector.buildUponParameters();
+		parametersBuilder.clearSelectionOverrides();
 		selectedTrackId = ADAPTIVE_TRACK_ID;
 		if (id != 100) {
-			trackSelector.setSelectionOverride(1, trackGroupArray, new MappingTrackSelector.SelectionOverride(FIXED_FACTORY, 0, id));
+			parametersBuilder.setSelectionOverride(1, trackGroupArray, new DefaultTrackSelector.SelectionOverride(0, id));
 			selectedTrackId = id;
 		}
+		trackSelector.setParameters(parametersBuilder);
 	}
 
 	private void tryToGetAudioFocus() {
@@ -367,7 +367,7 @@ public final class LocalPlayback implements Playback {
 			if (trackGroups != lastSeenTrackGroupArray) {
 				MappingTrackSelector.MappedTrackInfo mappedTrackInfo = trackSelector.getCurrentMappedTrackInfo();
 				if (mappedTrackInfo != null) {
-					if (mappedTrackInfo.getTrackTypeRendererSupport(C.TRACK_TYPE_AUDIO)
+					if (mappedTrackInfo.getTypeSupport(C.TRACK_TYPE_AUDIO)
 							== MappingTrackSelector.MappedTrackInfo.RENDERER_SUPPORT_UNSUPPORTED_TRACKS) {
 						Log.w(ExoPlayerEventListener.class.getSimpleName(), "Unsupported audio");
 					}

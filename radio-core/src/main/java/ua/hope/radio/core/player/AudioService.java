@@ -238,7 +238,7 @@ public class AudioService extends Service implements PlaybackManager.PlaybackSer
 	public TrackGroupArray getTrackInfo() {
 		if (mPlaybackManager != null && mPlaybackManager.getPlayback() != null) {
 			MappingTrackSelector.MappedTrackInfo info = mPlaybackManager.getPlayback().getTrackInfo();
-			if (info != null && info.length > 1) {
+			if (info != null && info.getRendererCount() > 1) {
 				return info.getTrackGroups(1);
 			}
 		}
