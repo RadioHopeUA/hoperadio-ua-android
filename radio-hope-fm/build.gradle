@@ -35,7 +35,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            manifestPlaceholders = [ applicationLabel: "@string/app_name_dev" ]
+            applicationIdSuffix ".debug"
+        }
         release {
+            manifestPlaceholders = [ applicationLabel: "@string/app_name"]
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), '../radio-core/proguard-rules.pro', 'proguard-rules.pro'
