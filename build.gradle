@@ -27,11 +27,11 @@ task clean(type: Delete) {
 
 subprojects {
     ext.global_compileSdkVersion = 27
-    ext.global_buildToolsVersion = "27.0.3"
+    ext.global_buildToolsVersion = "28.0.1"
     ext.global_minSdkVersion = 16
     ext.global_targetSdkVersion = 27
-    ext.global_versionCode = 13
-    ext.global_versionName = "1.1.3"
+    ext.global_versionCode = 14
+    ext.global_versionName = "1.1.4"
     ext.global_sourceCompatibility = JavaVersion.VERSION_1_8
     ext.global_targetCompatibility = JavaVersion.VERSION_1_8
     // https://fabric.io/kits/android/crashlytics/install

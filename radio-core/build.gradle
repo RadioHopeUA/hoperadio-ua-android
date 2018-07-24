@@ -24,7 +24,7 @@ ext {
     // https://bintray.com/google/exoplayer/exoplayer
     EXOPLAYER_VERSION = '2.8.2'
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
-    OKHTTP_VERSION = '3.10.0'
+    OKHTTP_VERSION = '3.11.0'
     // https://github.com/mikepenz/Android-Iconics
     ICONICS_VERSION = '3.0.4'
     CMD_FONTS_VERSION = '2.0.46.1'
