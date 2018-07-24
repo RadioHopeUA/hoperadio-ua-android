@@ -72,6 +72,10 @@ public class AudioService extends Service implements PlaybackManager.PlaybackSer
 		return mPlaybackManager !=null && mPlaybackManager.getPlayback() != null && mPlaybackManager.getPlayback().isPlaying();
 	}
 
+	public int getPlayerState() {
+		return mPlaybackManager ==null || mPlaybackManager.getPlayback() == null ? PlaybackStateCompat.STATE_NONE : mPlaybackManager.getPlayback().getState();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see android.app.Service#onCreate()

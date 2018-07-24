@@ -4,9 +4,9 @@
     <string name="copyright_capture">© 2016–2018 Медиа Группа «Надія»</string>
     <string name="facebook">Фейсбук</string>
     <string name="radio_capture">Радио</string>
-    <string name="status_buffering">буферизация</string>
-    <string name="status_error">ошибка</string>
-    <string name="status_preparing">инициализация</string>
+    <string name="status_buffering">Буферизация …</string>
+    <string name="status_error">Ошибка</string>
+
     <string name="twitter">Твиттер</string>
     <string name="vkontakte">Вконтакте</string>
     <string name="web_page">Веб страница</string>

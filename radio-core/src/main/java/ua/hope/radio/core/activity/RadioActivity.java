@@ -95,6 +95,16 @@ public class RadioActivity extends AppCompatActivity {
 				if (playButton != null) playButton.setImageResource(mPlayButtonDrawableResId);
 				if (audioButton != null) audioButton.setVisibility(View.INVISIBLE);
 			}
+
+			if (statusText != null) {
+				if (mService.getPlayerState() == PlaybackStateCompat.STATE_ERROR) {
+					statusText.setText(R.string.status_error);
+				} else if (mService.getPlayerState() == PlaybackStateCompat.STATE_BUFFERING) {
+					statusText.setText(R.string.status_buffering);
+				} else {
+					statusText.setText("");
+				}
+			}
 		}
 
 		// Called when the connection with the service disconnects unexpectedly
@@ -119,12 +129,20 @@ public class RadioActivity extends AppCompatActivity {
 		switch (state.getState()) {
 			case PlaybackStateCompat.STATE_PAUSED:
 			case PlaybackStateCompat.STATE_STOPPED:
+				statusText.setText("");
 				enablePlay = true;
+				break;
+			case PlaybackStateCompat.STATE_BUFFERING:
+				statusText.setText(R.string.status_buffering);
 				break;
 			case PlaybackStateCompat.STATE_ERROR:
 				enablePlay = true;
 				Log.e(TAG, "error, playback state: " + state.getErrorMessage());
+				statusText.setText(R.string.status_error);
 				Toast.makeText(this, state.getErrorMessage(), Toast.LENGTH_LONG).show();
+				break;
+			default:
+				statusText.setText("");
 				break;
 		}
 
@@ -204,6 +222,11 @@ public class RadioActivity extends AppCompatActivity {
 				playButton.setImageResource(mPlayButtonDrawableResId);
 				audioButton.setVisibility(View.INVISIBLE);
 				transportControls.pause();
+			} else if (pbState == PlaybackStateCompat.STATE_BUFFERING ||
+					pbState == PlaybackStateCompat.STATE_CONNECTING) {
+				playButton.setImageResource(mPlayButtonDrawableResId);
+				audioButton.setVisibility(View.INVISIBLE);
+				transportControls.stop();
 			} else {
 				playButton.setImageResource(mPauseButtonDrawableResId);
 				audioButton.setVisibility(View.VISIBLE);

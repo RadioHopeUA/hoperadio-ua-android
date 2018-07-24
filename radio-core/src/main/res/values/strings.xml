@@ -1,4 +1,4 @@
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources>
 	<string name="app_name">radio-core</string>
 
 	<string name="radio_info_url"></string>
@@ -8,15 +8,6 @@
 	<string name="twitter_url" translatable="false">https://twitter.com/golosnadii</string>
 	<string name="vk_url" translatable="false">https://vk.com/golosnadii</string>
 	<string name="mailto_url" translatable="false">mailto:radio@hope.ua</string>
-
-	<string name="error_drm_not_supported" translatable="false">Protected content not supported on API levels below 18</string>
-	<string name="error_drm_unsupported_scheme" translatable="false">This device does not support the required DRM scheme</string>
-	<string name="error_drm_unknown" translatable="false">An unknown DRM error occurred</string>
-	<string name="error_no_decoder" translatable="false">This device does not provide a decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>
-	<string name="error_no_secure_decoder" translatable="false">This device does not provide a secure decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>
-	<string name="error_querying_decoders" translatable="false">Unable to query device decoders</string>
-	<string name="error_instantiating_decoder" translatable="false">Unable to instantiate decoder <xliff:g id="decoder_name">%1$s</xliff:g></string>
-	<string name="storage_permission_denied" translatable="false">Permission to access storage was denied</string>
 
 	<string name="audio">Audio</string>
 	<string name="audio_kbits">%d Kbit</string>
@@ -30,4 +21,6 @@
 	<string name="write_us">Write us</string>
 	<string name="play">Play</string>
 	<string name="pause">Pause</string>
+	<string name="status_buffering">Buffering …</string>
+	<string name="status_error">Error</string>
 </resources>

@@ -357,6 +357,9 @@ public final class LocalPlayback implements Playback {
 	}
 
 	private final class ExoPlayerEventListener implements Player.EventListener {
+		private static final int MAX_RETRY_COUNT = 5;
+		private int retryCounter = 0;
+
 		@Override
 		public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
 			// Nothing to do.
@@ -386,7 +389,12 @@ public final class LocalPlayback implements Playback {
 			switch (playbackState) {
 				case Player.STATE_IDLE:
 				case Player.STATE_BUFFERING:
+					if (mCallback != null) {
+						mCallback.onPlaybackStatusChanged(getState());
+					}
+					break;
 				case Player.STATE_READY:
+					retryCounter = 0;
 					if (mCallback != null) {
 						mCallback.onPlaybackStatusChanged(getState());
 					}
@@ -406,10 +414,17 @@ public final class LocalPlayback implements Playback {
 			switch (error.type) {
 				case ExoPlaybackException.TYPE_SOURCE:
 					//retry
-					Log.e(TAG, "ExoPlayer error. Retrying");
+					retryCounter++;
+					Log.e(TAG, "ExoPlayer error. Retry is " + retryCounter);
 					stop(true);
-					play();
-					return;
+					if (retryCounter <= MAX_RETRY_COUNT) {
+						play();
+						return;
+					} else {
+						retryCounter = 0;
+						what = error.getSourceException().getMessage();
+					}
+					break;
 				case ExoPlaybackException.TYPE_RENDERER:
 					what = error.getRendererException().getMessage();
 					break;
@@ -422,7 +437,7 @@ public final class LocalPlayback implements Playback {
 
 			Log.e(TAG, "ExoPlayer error: what=" + what);
 			if (mCallback != null) {
-				mCallback.onError("ExoPlayer error " + what);
+				mCallback.onError("ExoPlayer error: " + what);
 			}
 		}
 

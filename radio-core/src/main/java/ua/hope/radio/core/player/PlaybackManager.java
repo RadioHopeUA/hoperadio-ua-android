@@ -72,7 +72,7 @@ public class PlaybackManager implements Playback.Callback {
 	 * @param error if not null, error message to present to the user.
 	 */
 	public void updatePlaybackState(String error) {
-		Log.d(TAG, "updatePlaybackState, playback state=" + mPlayback.getState());
+		Log.d(TAG, "updatePlaybackState, playback state=" + mPlayback.getState() + ", error=" + error);
 		long position = PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN;
 		if (mPlayback != null && mPlayback.isConnected()) {
 			position = mPlayback.getCurrentStreamPosition();
