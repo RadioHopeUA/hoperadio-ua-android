@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Hope.FM</string>
-    <string name="app_name_dev">Hope.FM (dev)</string>
+    <string name="app_name_dev" translatable="false">Hope.FM (dev)</string>
 
     <string name="radio_stream_url" translatable="false">http://stream.hope.ua:1935/hopefm/ngrp:live/playlist.m3u8</string>
     <string name="radio_info_url" translatable="false">http://stream.hope.ua:7777/currentsong?sid=21</string>

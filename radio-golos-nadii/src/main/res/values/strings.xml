@@ -15,4 +15,9 @@
 
     <string name="status_buffering">Buffering …</string>
     <string name="status_error">Error</string>
+    <string name="web_page">Web page</string>
+    <string name="facebook">Facebook</string>
+    <string name="vkontakte">Vkontakte</string>
+    <string name="twitter">Twitter</string>
+    <string name="write_us">Write us</string>
 </resources>
