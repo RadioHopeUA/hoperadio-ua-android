@@ -1,6 +1,7 @@
 package ua.hope.radio.golosnadii;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 
 import io.fabric.sdk.android.Fabric;
 import ua.hope.radio.core.RadioApplication;
@@ -13,8 +14,10 @@ public class GolosNadiiApplication extends RadioApplication {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		if (BuildConfig.BUILD_TYPE.equals("release")) {
-			Fabric.with(this, new Crashlytics());
-		}
+
+		Crashlytics crashlyticsKit = new Crashlytics.Builder()
+				.core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+				.build();
+		Fabric.with(this, crashlyticsKit);
 	}
 }
