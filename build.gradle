@@ -7,8 +7,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
+        classpath 'io.fabric.tools:gradle:1.26.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -37,7 +38,7 @@ ext {
             compileSdkVersion: 27,
             targetSdkVersion : 27,
             minSdkVersion    : 16,
-            buildToolsVersion: "28.0.2",
+            buildToolsVersion: "28.0.3",
     ]
 
     libraries = [
@@ -45,9 +46,9 @@ ext {
             appcompat  : "27.1.1",
             multidex   : "1.0.3",
             // https://fabric.io/kits/android/crashlytics/install
-            crashlytics: '2.9.4',
+            crashlytics: '2.9.5',
             // https://bintray.com/google/exoplayer/exoplayer/view
-            exoplayer  : "2.8.3",
+            exoplayer  : "2.8.4",
             // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
             okhttp     : "3.11.0",
             // https://mvnrepository.com/artifact/com.mikepenz/iconics-core
