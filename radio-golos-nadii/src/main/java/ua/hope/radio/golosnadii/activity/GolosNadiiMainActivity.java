@@ -1,7 +1,8 @@
 package ua.hope.radio.golosnadii.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import ua.hope.radio.core.activity.RadioActivity;
 import ua.hope.radio.golosnadii.R;

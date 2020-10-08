@@ -29,11 +29,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.RemoteException;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+
 import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -271,7 +272,7 @@ public class MediaNotificationManager extends BroadcastReceiver {
 				.setCategory(NotificationCompat.CATEGORY_TRANSPORT);
 
 		if (showMediaStyle) {
-			notificationBuilder.setStyle(new MediaStyle()
+			notificationBuilder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
 					// show only play/pause in compact view
 					.setShowActionsInCompactView(playPauseButtonPosition)
 					.setShowCancelButton(true)

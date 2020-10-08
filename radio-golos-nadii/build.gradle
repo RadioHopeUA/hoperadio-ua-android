@@ -1,7 +1,8 @@
 def configuration = rootProject.ext.configuration
 
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion configuration.compileSdkVersion

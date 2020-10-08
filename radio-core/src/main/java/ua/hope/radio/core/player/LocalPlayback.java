@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
+
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
@@ -151,6 +153,7 @@ public final class LocalPlayback implements Playback {
 		}
 		switch (mExoPlayer.getPlaybackState()) {
 			case Player.STATE_IDLE:
+			case Player.STATE_ENDED:
 				return PlaybackStateCompat.STATE_PAUSED;
 			case Player.STATE_BUFFERING:
 				return PlaybackStateCompat.STATE_BUFFERING;
@@ -158,8 +161,6 @@ public final class LocalPlayback implements Playback {
 				return mExoPlayer.getPlayWhenReady()
 						? PlaybackStateCompat.STATE_PLAYING
 						: PlaybackStateCompat.STATE_PAUSED;
-			case Player.STATE_ENDED:
-				return PlaybackStateCompat.STATE_PAUSED;
 			default:
 				return PlaybackStateCompat.STATE_NONE;
 		}

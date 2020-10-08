@@ -1,9 +1,7 @@
 package ua.hope.radio.hopefm;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
-import io.fabric.sdk.android.Fabric;
 import ua.hope.radio.core.RadioApplication;
 
 /**
@@ -15,9 +13,6 @@ public class HopeFMApplication extends RadioApplication {
 	public void onCreate() {
 		super.onCreate();
 
-		Crashlytics crashlyticsKit = new Crashlytics.Builder()
-				.core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-				.build();
-		Fabric.with(this, crashlyticsKit);
+		FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG);
 	}
 }

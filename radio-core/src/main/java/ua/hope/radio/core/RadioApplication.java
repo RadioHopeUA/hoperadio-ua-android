@@ -1,6 +1,6 @@
 package ua.hope.radio.core;
 
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDexApplication;
 
 /**
  * Created by vitalii on 1/11/18.

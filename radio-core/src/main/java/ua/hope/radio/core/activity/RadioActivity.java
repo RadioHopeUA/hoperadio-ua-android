@@ -7,12 +7,12 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -23,11 +23,10 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
-import ua.hope.radio.core.BuildConfig;
 import ua.hope.radio.core.R;
 import ua.hope.radio.core.player.AudioService;
 import ua.hope.radio.core.player.LocalPlayback;
@@ -84,9 +83,7 @@ public class RadioActivity extends AppCompatActivity {
 				connectToSession(mService.getSessionToken());
 			} catch (RemoteException e) {
 				Log.e(TAG, "could not connect media controller", e);
-				if (BuildConfig.BUILD_TYPE.equals("release")) {
-					Crashlytics.logException(e);
-				}
+				FirebaseCrashlytics.getInstance().recordException(e);
 			}
 			if (mService.isPlaying()) {
 				if (playButton != null) playButton.setImageResource(mPauseButtonDrawableResId);
