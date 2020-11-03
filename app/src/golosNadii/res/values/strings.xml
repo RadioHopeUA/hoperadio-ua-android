@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name" translatable="false">Голос Надії</string>
+    <string name="app_name_dev" translatable="false">Голос Надії (dev)</string>
+
+    <string name="radio_stream_url" translatable="false">https://stream.hope.ua/golos-nadii/ngrp:live/playlist.m3u8</string>
+    <string name="radio_info_url" translatable="false">http://stream.hope.ua:7777/currentsong?sid=11</string>
+
+    <string name="radio_descr">Hope giving radio …</string>
+    <string name="radio_name" translatable="false">@string/app_name</string>
+</resources>

@@ -1,0 +1,18 @@
+<resources>
+    <string name="website_url" translatable="false">http://radio.hope.ua</string>
+    <string name="fb_url" translatable="false">https://www.facebook.com/golosnadii</string>
+    <string name="twitter_url" translatable="false">https://twitter.com/golosnadii</string>
+    <string name="mailto_url" translatable="false">radio@hope.ua</string>
+
+    <string name="audio_kbits">%d Kbit</string>
+    <string name="audio_auto">Auto</string>
+    <string name="radio_capture">Radio</string>
+    <string name="web_page">Web page</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter">Twitter</string>
+    <string name="write_us">Write us</string>
+    <string name="status_buffering">Buffering …</string>
+    <string name="status_error">Error</string>
+    <string name="audio_notification_channel_name" translatable="false">Channel ID for Radio</string>
+    <string name="copyright_capture">© 2016–2020 Hope Media Group UA</string>
+</resources>
