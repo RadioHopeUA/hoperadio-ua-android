@@ -9,7 +9,6 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("com.google.gms.google-services")
     kotlin("android")
-    kotlin("android.extensions")
     kotlin("kapt")
     id("koin")
 }
@@ -23,7 +22,7 @@ tasks.withType<KotlinCompile> {
 
 android {
     compileSdkVersion(30)
-    buildToolsVersion("30.0.2")
+    buildToolsVersion("30.0.3")
 
     defaultConfig {
         applicationId = "ua.hope.radio"
@@ -107,34 +106,35 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.10")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("androidx.media:media:1.2.0")
+    implementation("androidx.media:media:1.2.1")
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
     implementation("androidx.lifecycle:lifecycle-service:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
     implementation("com.android.support.constraint:constraint-layout:2.0.4")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0")
+    val coroutinesVersion = "1.4.2"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
-    implementation("com.google.firebase:firebase-crashlytics:17.2.2")
+    implementation("com.google.firebase:firebase-crashlytics:17.3.0")
     implementation("com.google.firebase:firebase-analytics:18.0.0")
     val okHttpVersion = "4.9.0"
     implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
-    val exoPlayerVersion = "2.12.1"
+    val exoPlayerVersion = "2.12.2"
     implementation("com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion")
     implementation("com.google.android.exoplayer:exoplayer-hls:$exoPlayerVersion")
     implementation("com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion")
 
     implementation("com.jakewharton.timber:timber:4.7.1")
 
-    val koinVersion = "2.2.0-rc-4"
+    val koinVersion = "2.2.2"
     implementation("org.koin:koin-androidx-scope:$koinVersion")
     implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
 
