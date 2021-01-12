@@ -46,7 +46,7 @@ open class RadioActivity : AppCompatActivity() {
         playerViewModel.playerStatus.observe(this, {
             binding.audioPrefIv.visibility = View.INVISIBLE
             binding.playerStatusTv.text = when (it) {
-                is PlayerStatus.Bufferring -> getString(R.string.status_buffering)
+                is PlayerStatus.Buffering -> getString(R.string.status_buffering)
                 is PlayerStatus.Playing -> {
                     binding.playerControlView.player = it.player
                     binding.audioPrefIv.visibility = View.VISIBLE

@@ -75,7 +75,7 @@ class AudioPlaybackService : LifecycleService() {
                     )
 
                 @Nullable
-                override fun getCurrentContentText(player: Player): String? {
+                override fun getCurrentContentText(player: Player): String {
                     return trackInfo.value?.artist ?: ""
                 }
 
@@ -118,8 +118,10 @@ class AudioPlaybackService : LifecycleService() {
             }
         ).apply {
             // Omit skip previous and next actions.
-            setUseNavigationActions(false)
-            setUseNavigationActionsInCompactView(false)
+            setUseNextAction(false)
+            setUsePreviousAction(false)
+            setUseNextActionInCompactView(false)
+            setUsePreviousActionInCompactView(false)
             // Omit stop action.
             setUseStopAction(false)
             setControlDispatcher(DefaultControlDispatcher(0, 0))
@@ -210,7 +212,7 @@ class AudioPlaybackService : LifecycleService() {
                 Player.STATE_BUFFERING -> {
                     updateStreamInfoJob?.cancel()
                     trackInfo.value = StreamInfo.EMPTY
-                    status.value = PlayerStatus.Bufferring
+                    status.value = PlayerStatus.Buffering
                 }
                 Player.STATE_READY -> {
                     if (exoPlayer.playWhenReady) {

@@ -71,7 +71,7 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 }
 
 sealed class PlayerStatus() {
-    object Bufferring : PlayerStatus()
+    object Buffering : PlayerStatus()
     class Playing(val player: Player) : PlayerStatus()
     object Stopped : PlayerStatus()
     object Error : PlayerStatus()
