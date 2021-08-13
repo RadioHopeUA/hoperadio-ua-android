@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="copyright_capture">© 2016–2020 Медиа Группа «Надія»</string>
+    <string name="copyright_capture">© 2016–2021 Медиа Группа «Надія»</string>
     <string name="radio_capture">Радио</string>
     <string name="status_buffering">Буферизация …</string>
     <string name="status_error">Ошибка</string>
