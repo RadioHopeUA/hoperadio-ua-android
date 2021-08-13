@@ -8,9 +8,8 @@ import androidx.lifecycle.ViewModel
 import com.google.android.exoplayer2.Player
 import timber.log.Timber
 import ua.hope.radio.utils.SingleLiveEvent
-import javax.inject.Inject
 
-class PlayerViewModel @Inject constructor() : ViewModel() {
+class PlayerViewModel : ViewModel() {
     private val connection = object : ServiceConnection {
         var audioPlaybackService: AudioPlaybackService? = null
 
@@ -26,11 +25,11 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private val _playerStatus: SingleLiveEvent<PlayerStatus> = AudioPlaybackService.status
-    val playerStatus: LiveData<PlayerStatus> = _playerStatus
+    private val _playerStatus: SingleLiveEvent<PlayerState> = AudioPlaybackService.status
+    val playerStatus: LiveData<PlayerState> = _playerStatus
 
-    private val _serviceStatus: SingleLiveEvent<ServiceStatus> = SingleLiveEvent()
-    val serviceStatus: LiveData<ServiceStatus> = _serviceStatus
+    private val _serviceStatus: SingleLiveEvent<ServiceState> = SingleLiveEvent()
+    val serviceStatus: LiveData<ServiceState> = _serviceStatus
 
     private val _streamInfo: SingleLiveEvent<StreamInfo> = AudioPlaybackService.trackInfo
     val streamInfo: LiveData<StreamInfo> = _streamInfo
@@ -41,13 +40,13 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     private fun bindToAudioService() {
         if (connection.audioPlaybackService == null) {
-            _serviceStatus.postValue(ServiceStatus.Bind(connection))
+            _serviceStatus.postValue(ServiceState.Bind(connection))
         }
     }
 
     private fun unbindAudioService() {
         if (connection.audioPlaybackService != null) {
-            _serviceStatus.postValue(ServiceStatus.UnBind(connection))
+            _serviceStatus.postValue(ServiceState.UnBind(connection))
             connection.audioPlaybackService = null
         }
     }
@@ -57,7 +56,7 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
             connection.audioPlaybackService?.play(url)
         } catch (t: Throwable) {
             Timber.e(t)
-            _playerStatus.postValue(PlayerStatus.Error)
+            _playerStatus.postValue(PlayerState.Error)
         }
     }
 
@@ -70,14 +69,14 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     }
 }
 
-sealed class PlayerStatus() {
-    object Buffering : PlayerStatus()
-    class Playing(val player: Player) : PlayerStatus()
-    object Stopped : PlayerStatus()
-    object Error : PlayerStatus()
+sealed interface PlayerState {
+    object Buffering : PlayerState
+    class Playing(val player: Player) : PlayerState
+    object Stopped : PlayerState
+    object Error : PlayerState
 }
 
-sealed class ServiceStatus {
-    class Bind(val connection: ServiceConnection) : ServiceStatus()
-    class UnBind(val connection: ServiceConnection) : ServiceStatus()
+sealed interface ServiceState {
+    class Bind(val connection: ServiceConnection) : ServiceState
+    class UnBind(val connection: ServiceConnection) : ServiceState
 }

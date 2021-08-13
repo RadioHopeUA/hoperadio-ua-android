@@ -31,7 +31,7 @@ import timber.log.Timber
 import ua.hope.radio.R
 import ua.hope.radio.activity.RadioActivity
 import ua.hope.radio.utils.SingleLiveEvent
-import kotlin.time.seconds
+import kotlin.time.Duration
 
 @OptIn(kotlin.time.ExperimentalTime::class)
 class AudioPlaybackService : LifecycleService() {
@@ -96,7 +96,7 @@ class AudioPlaybackService : LifecycleService() {
                 }
 
                 override fun onNotificationCancelled(notificationId: Int) {
-                    status.value = PlayerStatus.Stopped
+                    status.value = PlayerState.Stopped
                     exoPlayer.stop(true)
 
                     stopSelf()
@@ -187,7 +187,7 @@ class AudioPlaybackService : LifecycleService() {
     }
 
     private fun startStreamInfoJob() {
-        updateStreamInfoJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(5.seconds.toLongMilliseconds()) {
+        updateStreamInfoJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(Duration.seconds(5).inWholeMilliseconds) {
             Timber.d("Get track info")
             try {
                 val request = Request.Builder()
@@ -212,16 +212,16 @@ class AudioPlaybackService : LifecycleService() {
                 Player.STATE_BUFFERING -> {
                     updateStreamInfoJob?.cancel()
                     trackInfo.value = StreamInfo.EMPTY
-                    status.value = PlayerStatus.Buffering
+                    status.value = PlayerState.Buffering
                 }
                 Player.STATE_READY -> {
                     if (exoPlayer.playWhenReady) {
-                        status.value = PlayerStatus.Playing(exoPlayer)
+                        status.value = PlayerState.Playing(exoPlayer)
                         startStreamInfoJob()
                     } else {
                         updateStreamInfoJob?.cancel()
                         trackInfo.value = StreamInfo.EMPTY
-                        status.value = PlayerStatus.Stopped
+                        status.value = PlayerState.Stopped
                     }
                 }
                 Player.STATE_ENDED,
@@ -229,7 +229,7 @@ class AudioPlaybackService : LifecycleService() {
                     stopForeground(true)
                     updateStreamInfoJob?.cancel()
                     trackInfo.value = StreamInfo.EMPTY
-                    status.value = PlayerStatus.Stopped
+                    status.value = PlayerState.Stopped
                 }
             }
         }
@@ -237,7 +237,7 @@ class AudioPlaybackService : LifecycleService() {
         override fun onPlayerError(e: ExoPlaybackException) {
             updateStreamInfoJob?.cancel()
             trackInfo.value = StreamInfo.EMPTY
-            status.value = PlayerStatus.Error
+            status.value = PlayerState.Error
         }
     }
 
@@ -247,7 +247,7 @@ class AudioPlaybackService : LifecycleService() {
         private const val TRACK_GROUP_IDX = 0
         const val NOTIFICATION_ID = 100
         const val NOTIFICATION_CHANNEL = "hope_radio_ua_audio_channel"
-        val status = SingleLiveEvent<PlayerStatus>()
+        val status = SingleLiveEvent<PlayerState>()
         val trackInfo = SingleLiveEvent<StreamInfo>()
     }
 }

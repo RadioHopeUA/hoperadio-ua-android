@@ -1,4 +1,4 @@
-import com.android.builder.signing.DefaultSigningConfig
+import com.android.build.api.dsl.ApkSigningConfig
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.FileInputStream
 import java.util.*
@@ -6,11 +6,10 @@ import kotlin.collections.mutableMapOf
 
 plugins {
     id("com.android.application")
-    id("com.google.firebase.crashlytics")
-    id("com.google.gms.google-services")
     kotlin("android")
     kotlin("kapt")
-    id("koin")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 tasks.withType<KotlinCompile> {
@@ -21,13 +20,13 @@ tasks.withType<KotlinCompile> {
 }
 
 android {
-    compileSdkVersion(30)
-    buildToolsVersion("30.0.3")
+    compileSdk = 30
+    buildToolsVersion = "30.0.3"
 
     defaultConfig {
         applicationId = "ua.hope.radio"
-        minSdkVersion(21)
-        targetSdkVersion(30)
+        minSdk = 21
+        targetSdk = 30
         versionCode = 16
         versionName = "1.2.0"
         multiDexEnabled = true
@@ -48,20 +47,18 @@ android {
     buildTypes {
         getByName("debug") {
             applicationIdSuffix = ".debug"
-            firebaseCrashlytics.mappingFileUploadEnabled = false
             addManifestPlaceholders(mutableMapOf<String, Any>("applicationLabel" to "@string/app_name_dev"))
         }
 
         getByName("release") {
             isMinifyEnabled = true
-            isZipAlignEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             addManifestPlaceholders(mutableMapOf<String, Any>("applicationLabel" to "@string/app_name"))
         }
     }
 
-    flavorDimensions("version")
+    flavorDimensions += "version"
     productFlavors {
         create("hopeFm") {
             dimension = "version"
@@ -86,7 +83,7 @@ android {
     }
 
     packagingOptions {
-        exclude("META-INF/*")
+        resources.excludes.add("META-INF/*")
     }
 
     applicationVariants.all {
@@ -106,44 +103,49 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.1")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation("androidx.core:core-ktx:1.3.2")
-    implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("androidx.media:media:1.2.1")
+    implementation("androidx.core:core-ktx:1.6.0")
+    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation("androidx.media:media:1.4.1")
     implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-service:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
-    implementation("com.android.support.constraint:constraint-layout:2.0.4")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.0")
+    val lifecycleVersion = "2.3.1"
+    implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
 
-    val coroutinesVersion = "1.4.2"
+    val coroutinesVersion = "1.5.1"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
-    implementation("com.google.firebase:firebase-crashlytics:17.3.0")
-    implementation("com.google.firebase:firebase-analytics:18.0.0")
-    val okHttpVersion = "4.9.0"
+    implementation(platform("com.google.firebase:firebase-bom:28.3.1"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+
+    val okHttpVersion = "4.9.1"
     implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
+
     val exoPlayerVersion = "2.12.2"
     implementation("com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion")
     implementation("com.google.android.exoplayer:exoplayer-hls:$exoPlayerVersion")
     implementation("com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion")
 
-    implementation("com.jakewharton.timber:timber:4.7.1")
+    implementation("com.jakewharton.timber:timber:5.0.0")
 
-    val koinVersion = "2.2.2"
-    implementation("org.koin:koin-androidx-scope:$koinVersion")
-    implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
+    val koinVersion = "3.1.2"
+    implementation("io.insert-koin:koin-core:$koinVersion")
+    implementation("io.insert-koin:koin-android:$koinVersion")
 
-    testImplementation("junit:junit:4.13.1")
-    androidTestImplementation("androidx.test.ext:junit:1.1.2")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 }
 
-fun loadSigningConfig(propertiesPath: String, config: DefaultSigningConfig) {
+fun loadSigningConfig(propertiesPath: String, config: ApkSigningConfig) {
     val props = Properties()
     val propertiesFile = project.file(propertiesPath)
     if (propertiesFile.exists()) {

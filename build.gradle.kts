@@ -1,30 +1,28 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 buildscript {
-    val kotlinVersion = "1.4.21"
-    val koinVersion = "2.2.2"
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.1.1")
-        classpath("com.google.gms:google-services:4.3.4")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.4.1")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        classpath("org.koin:koin-gradle-plugin:$koinVersion")
+        classpath("com.android.tools.build:gradle:7.0.0")
+        classpath(kotlin("gradle-plugin", version = "1.5.21"))
+        classpath("com.google.gms:google-services:4.3.10")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.7.1")
     }
 }
 
 plugins {
-    id("com.github.ben-manes.versions") version "0.36.0"
+    // https://github.com/ben-manes/gradle-versions-plugin
+    id("com.github.ben-manes.versions") version "0.39.0"
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
+        jcenter()
     }
 }
 

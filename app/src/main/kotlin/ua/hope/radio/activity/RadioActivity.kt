@@ -19,9 +19,9 @@ import ua.hope.radio.BuildConfig
 import ua.hope.radio.R
 import ua.hope.radio.databinding.ActivityMainBinding
 import ua.hope.radio.player.AudioPlaybackService
-import ua.hope.radio.player.PlayerStatus
+import ua.hope.radio.player.PlayerState
 import ua.hope.radio.player.PlayerViewModel
-import ua.hope.radio.player.ServiceStatus
+import ua.hope.radio.player.ServiceState
 import ua.hope.radio.player.TracksMetadata
 
 /**
@@ -39,24 +39,24 @@ open class RadioActivity : AppCompatActivity() {
 
         playerViewModel.serviceStatus.observe(this, {
             when (it) {
-                is ServiceStatus.Bind -> bindService(Intent(this, AudioPlaybackService::class.java), it.connection, Context.BIND_AUTO_CREATE)
-                is ServiceStatus.UnBind -> unbindService(it.connection)
+                is ServiceState.Bind -> bindService(Intent(this, AudioPlaybackService::class.java), it.connection, Context.BIND_AUTO_CREATE)
+                is ServiceState.UnBind -> unbindService(it.connection)
             }
         })
         playerViewModel.playerStatus.observe(this, {
             binding.audioPrefIv.visibility = View.INVISIBLE
             binding.playerStatusTv.text = when (it) {
-                is PlayerStatus.Buffering -> getString(R.string.status_buffering)
-                is PlayerStatus.Playing -> {
+                is PlayerState.Buffering -> getString(R.string.status_buffering)
+                is PlayerState.Playing -> {
                     binding.playerControlView.player = it.player
                     binding.audioPrefIv.visibility = View.VISIBLE
                     ""
                 }
-                is PlayerStatus.Stopped -> {
+                is PlayerState.Stopped -> {
                     binding.playerControlView.player?.stop(true)
                     ""
                 }
-                is PlayerStatus.Error -> {
+                is PlayerState.Error -> {
                     Toast.makeText(this, getString(R.string.status_error), Toast.LENGTH_LONG).show()
                     getString(R.string.status_error)
                 }
