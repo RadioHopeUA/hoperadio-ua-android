@@ -16,8 +16,10 @@ import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
+import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -48,7 +50,7 @@ class AudioPlaybackService : LifecycleService() {
         exoPlayer = SimpleExoPlayer.Builder(this).setTrackSelector(trackSelector).build()
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
-            .setContentType(C.CONTENT_TYPE_SPEECH)
+            .setContentType(C.CONTENT_TYPE_MUSIC)
             .build()
         exoPlayer.setAudioAttributes(audioAttributes, true)
         exoPlayer.addListener(PlayerEventListener())
@@ -147,7 +149,10 @@ class AudioPlaybackService : LifecycleService() {
     fun play(url: String) {
         exoPlayer.stop()
         exoPlayer.clearMediaItems()
-        exoPlayer.setMediaItem(MediaItem.fromUri(url))
+        val hlsMediaSource = HlsMediaSource.Factory(DefaultHttpDataSource.Factory())
+            .setAllowChunklessPreparation(true)
+            .createMediaSource(MediaItem.fromUri(url))
+        exoPlayer.setMediaSource(hlsMediaSource)
         exoPlayer.prepare()
         exoPlayer.playWhenReady = true
     }
