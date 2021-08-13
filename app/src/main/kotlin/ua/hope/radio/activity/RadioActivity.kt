@@ -53,7 +53,8 @@ open class RadioActivity : AppCompatActivity() {
                     ""
                 }
                 is PlayerState.Stopped -> {
-                    binding.playerControlView.player?.stop(true)
+                    binding.playerControlView.player?.stop()
+                    binding.playerControlView.player?.clearMediaItems()
                     ""
                 }
                 is PlayerState.Error -> {

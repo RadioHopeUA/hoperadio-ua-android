@@ -128,8 +128,9 @@ dependencies {
     val okHttpVersion = "4.9.1"
     implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
+    implementation("com.squareup.okio:okio:2.10.0")
 
-    val exoPlayerVersion = "2.12.2"
+    val exoPlayerVersion = "2.15.0"
     implementation("com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion")
     implementation("com.google.android.exoplayer:exoplayer-hls:$exoPlayerVersion")
     implementation("com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion")

@@ -11,9 +11,8 @@ import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.DefaultControlDispatcher
-import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
@@ -54,13 +53,10 @@ class AudioPlaybackService : LifecycleService() {
         exoPlayer.setAudioAttributes(audioAttributes, true)
         exoPlayer.addListener(PlayerEventListener())
 
-        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
-            applicationContext,
-            NOTIFICATION_CHANNEL,
-            R.string.app_name,
-            R.string.audio_notification_channel_name,
-            NOTIFICATION_ID,
-            object : PlayerNotificationManager.MediaDescriptionAdapter {
+        playerNotificationManager = PlayerNotificationManager.Builder(applicationContext, NOTIFICATION_ID, NOTIFICATION_CHANNEL)
+            .setChannelDescriptionResourceId(R.string.audio_notification_channel_name)
+            .setChannelNameResourceId(R.string.app_name)
+            .setMediaDescriptionAdapter(object : PlayerNotificationManager.MediaDescriptionAdapter {
                 override fun getCurrentContentTitle(player: Player): String {
                     return trackInfo.value?.title ?: "..."
                 }
@@ -86,18 +82,12 @@ class AudioPlaybackService : LifecycleService() {
                 ): Bitmap? {
                     return BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
                 }
-            },
-            object : PlayerNotificationManager.NotificationListener {
-                override fun onNotificationStarted(
-                    notificationId: Int,
-                    notification: Notification
-                ) {
-                    startForeground(notificationId, notification)
-                }
-
-                override fun onNotificationCancelled(notificationId: Int) {
+            })
+            .setNotificationListener(object : PlayerNotificationManager.NotificationListener {
+                override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
                     status.value = PlayerState.Stopped
-                    exoPlayer.stop(true)
+                    exoPlayer.stop()
+                    exoPlayer.clearMediaItems()
 
                     stopSelf()
                 }
@@ -115,8 +105,10 @@ class AudioPlaybackService : LifecycleService() {
                         stopForeground(false)
                     }
                 }
-            }
-        ).apply {
+            })
+            .setSmallIconResourceId(R.drawable.ic_stat_audio)
+            .build()
+        .apply {
             // Omit skip previous and next actions.
             setUseNextAction(false)
             setUsePreviousAction(false)
@@ -124,9 +116,9 @@ class AudioPlaybackService : LifecycleService() {
             setUsePreviousActionInCompactView(false)
             // Omit stop action.
             setUseStopAction(false)
-            setControlDispatcher(DefaultControlDispatcher(0, 0))
+            setUseRewindAction(false)
+            setUseFastForwardAction(false)
 
-            setSmallIcon(R.drawable.ic_stat_audio)
             setColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
 
             setPlayer(exoPlayer)
@@ -153,7 +145,8 @@ class AudioPlaybackService : LifecycleService() {
     }
 
     fun play(url: String) {
-        exoPlayer.stop(true)
+        exoPlayer.stop()
+        exoPlayer.clearMediaItems()
         exoPlayer.setMediaItem(MediaItem.fromUri(url))
         exoPlayer.prepare()
         exoPlayer.playWhenReady = true
@@ -201,12 +194,12 @@ class AudioPlaybackService : LifecycleService() {
                     }
                 }
             } catch (t: Throwable) {
-                Timber.e(t)
+                Timber.e(t, "Unable to get track info")
             }
         }
     }
 
-    private inner class PlayerEventListener : Player.EventListener {
+    private inner class PlayerEventListener : Player.Listener {
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
             when (playbackState) {
                 Player.STATE_BUFFERING -> {
@@ -234,7 +227,7 @@ class AudioPlaybackService : LifecycleService() {
             }
         }
 
-        override fun onPlayerError(e: ExoPlaybackException) {
+        override fun onPlayerError(e: PlaybackException) {
             updateStreamInfoJob?.cancel()
             trackInfo.value = StreamInfo.EMPTY
             status.value = PlayerState.Error
