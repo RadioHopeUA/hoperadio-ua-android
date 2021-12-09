@@ -14,19 +14,18 @@ plugins {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjvm-default=all", "-Xopt-in=kotlin.RequiresOptIn")
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 }
 
 android {
-    compileSdk = 30
-    buildToolsVersion = "30.0.3"
+    compileSdk = 31
+    buildToolsVersion = "31.0.0"
 
     defaultConfig {
         applicationId = "ua.hope.radio"
         minSdk = 21
-        targetSdk = 30
+        targetSdk = 31
         versionCode = 16
         versionName = "1.2.0"
         multiDexEnabled = true
@@ -74,8 +73,8 @@ android {
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     buildFeatures {
@@ -106,38 +105,37 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation("androidx.core:core-ktx:1.6.0")
-    implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("androidx.media:media:1.4.1")
+    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.appcompat:appcompat:1.4.0")
+    implementation("androidx.media:media:1.4.3")
     implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.0")
-    val lifecycleVersion = "2.3.1"
+    implementation("androidx.constraintlayout:constraintlayout:2.1.2")
+    val lifecycleVersion = "2.4.0"
     implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
 
-    val coroutinesVersion = "1.5.1"
+    val coroutinesVersion = "1.5.2"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
-    implementation(platform("com.google.firebase:firebase-bom:28.3.1"))
+    implementation(platform("com.google.firebase:firebase-bom:29.0.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
 
-    val okHttpVersion = "4.9.1"
+    val okHttpVersion = "4.9.3"
     implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
-    implementation("com.squareup.okio:okio:2.10.0")
 
-    val exoPlayerVersion = "2.15.0"
+    val exoPlayerVersion = "2.16.1"
     implementation("com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion")
     implementation("com.google.android.exoplayer:exoplayer-hls:$exoPlayerVersion")
     implementation("com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion")
 
-    implementation("com.jakewharton.timber:timber:5.0.0")
+    implementation("com.jakewharton.timber:timber:5.0.1")
 
-    val koinVersion = "3.1.2"
+    val koinVersion = "3.1.4"
     implementation("io.insert-koin:koin-core:$koinVersion")
     implementation("io.insert-koin:koin-android:$koinVersion")
 

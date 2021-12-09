@@ -11,13 +11,14 @@ import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelectionOverrides
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import kotlinx.coroutines.CoroutineScope
@@ -32,22 +33,19 @@ import timber.log.Timber
 import ua.hope.radio.R
 import ua.hope.radio.activity.RadioActivity
 import ua.hope.radio.utils.SingleLiveEvent
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
-@OptIn(kotlin.time.ExperimentalTime::class)
 class AudioPlaybackService : LifecycleService() {
     private var playerNotificationManager: PlayerNotificationManager? = null
-    lateinit var exoPlayer: SimpleExoPlayer
+    lateinit var exoPlayer: ExoPlayer
         private set
-    private lateinit var trackSelector: DefaultTrackSelector
     private val tracksMetadata: TracksMetadata = TracksMetadata()
     private var updateStreamInfoJob: Deferred<Unit>? = null
 
     override fun onCreate() {
         super.onCreate()
 
-        trackSelector = DefaultTrackSelector(this)
-        exoPlayer = SimpleExoPlayer.Builder(this).setTrackSelector(trackSelector).build()
+        exoPlayer = ExoPlayer.Builder(this).build()
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
             .setContentType(C.CONTENT_TYPE_MUSIC)
@@ -69,7 +67,7 @@ class AudioPlaybackService : LifecycleService() {
                         applicationContext,
                         0,
                         Intent(applicationContext, RadioActivity::class.java),
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                     )
 
                 @Nullable
@@ -160,7 +158,7 @@ class AudioPlaybackService : LifecycleService() {
     fun getTracksMetadata(): TracksMetadata {
         tracksMetadata.tracks.clear()
         tracksMetadata.tracks[TracksMetadata.ADAPTIVE] = 0
-        val group = trackSelector.currentMappedTrackInfo?.getTrackGroups(RENDER_IDX)
+        val group = (exoPlayer.trackSelector as DefaultTrackSelector).currentMappedTrackInfo?.getTrackGroups(RENDER_IDX)
         if (group != null) {
             val len = group[TRACK_GROUP_IDX].length
             for (index in 0 until len) {
@@ -173,19 +171,23 @@ class AudioPlaybackService : LifecycleService() {
 
     fun selectTrack(trackId: Int) {
         tracksMetadata.selected = trackId
-        val group = trackSelector.currentMappedTrackInfo?.getTrackGroups(RENDER_IDX)
-        if (group != null) {
+        val trackSelector = exoPlayer.trackSelector as DefaultTrackSelector
+        val groups = trackSelector.currentMappedTrackInfo?.getTrackGroups(RENDER_IDX)
+        if (groups != null) {
             val builder = trackSelector.buildUponParameters()
-            builder.clearSelectionOverrides()
+            builder.setTrackSelectionOverrides(TrackSelectionOverrides.EMPTY)
             if (trackId != TracksMetadata.ADAPTIVE) {
-                builder.setSelectionOverride(RENDER_IDX, group, DefaultTrackSelector.SelectionOverride(TRACK_GROUP_IDX, trackId))
+                val overrides = TrackSelectionOverrides.Builder()
+                    .addOverride(TrackSelectionOverrides.TrackSelectionOverride(groups.get(TRACK_GROUP_IDX), listOf(trackId)))
+                    .build()
+                builder.setTrackSelectionOverrides(overrides)
                 trackSelector.parameters = builder.build()
             }
         }
     }
 
     private fun startStreamInfoJob() {
-        updateStreamInfoJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(Duration.seconds(5).inWholeMilliseconds) {
+        updateStreamInfoJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(5.seconds.inWholeMilliseconds) {
             Timber.d("Get track info")
             try {
                 val request = Request.Builder()
