@@ -17,6 +17,7 @@ class RadioApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
+        configureTimber()
         startKoin{
             modules(koinModule)
         }

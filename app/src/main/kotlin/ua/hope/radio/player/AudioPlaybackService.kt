@@ -188,7 +188,7 @@ class AudioPlaybackService : LifecycleService() {
 
     private fun startStreamInfoJob() {
         updateStreamInfoJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(5.seconds.inWholeMilliseconds) {
-            Timber.d("Get track info")
+            Timber.d("Getting track info")
             try {
                 val request = Request.Builder()
                     .url(getString(R.string.radio_info_url))

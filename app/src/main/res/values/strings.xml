@@ -1,5 +1,5 @@
 <resources>
-    <string name="website_url" translatable="false">http://radio.hope.ua</string>
+    <string name="website_url" translatable="false">https://radio.hope.ua</string>
     <string name="fb_url" translatable="false">https://www.facebook.com/golosnadii</string>
     <string name="twitter_url" translatable="false">https://twitter.com/golosnadii</string>
     <string name="mailto_url" translatable="false">radio@hope.ua</string>
