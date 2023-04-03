@@ -1,5 +1,6 @@
 package ua.hope.radio.activity
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,7 +14,11 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.annotation.OptIn
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.media3.common.util.UnstableApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ua.hope.radio.BuildConfig
 import ua.hope.radio.R
@@ -24,10 +29,12 @@ import ua.hope.radio.player.PlayerViewModel
 import ua.hope.radio.player.ServiceState
 import ua.hope.radio.player.TracksMetadata
 
+
 /**
  * Created by vitalii on 8/7/17.
  */
-open class RadioActivity : AppCompatActivity() {
+@OptIn(UnstableApi::class)
+class RadioActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val playerViewModel: PlayerViewModel by viewModel()
 
@@ -155,6 +162,25 @@ open class RadioActivity : AppCompatActivity() {
                 mPopupMenu.menu.setGroupCheckable(MENU_GROUP_TRACKS, true, true)
                 mPopupMenu.menu.findItem(tracksMetadata.selected).isChecked = true
                 mPopupMenu.show()
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onStart() {
+        super.onStart()
+        requestNotificationApi33Permission()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun requestNotificationApi33Permission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    22
+                )
             }
         }
     }

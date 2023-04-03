@@ -7,19 +7,20 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Binder
 import android.os.IBinder
+import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.audio.AudioAttributes
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.TrackSelectionOverride
-import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.TrackSelectionOverride
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import androidx.media3.ui.PlayerNotificationManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +35,7 @@ import ua.hope.radio.activity.RadioActivity
 import ua.hope.radio.utils.SingleLiveEvent
 import kotlin.time.Duration.Companion.seconds
 
+@OptIn(UnstableApi::class)
 class AudioPlaybackService : LifecycleService() {
     private var playerNotificationManager: PlayerNotificationManager? = null
     lateinit var exoPlayer: ExoPlayer
@@ -44,12 +46,10 @@ class AudioPlaybackService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
 
-        exoPlayer = ExoPlayer.Builder(this).build()
-        val audioAttributes = AudioAttributes.Builder()
-            .setUsage(C.USAGE_MEDIA)
-            .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+        exoPlayer = ExoPlayer.Builder(this)
+            .setAudioAttributes(AudioAttributes.DEFAULT, true)
             .build()
-        exoPlayer.setAudioAttributes(audioAttributes, true)
+
         exoPlayer.addListener(PlayerEventListener())
 
         playerNotificationManager = PlayerNotificationManager.Builder(
@@ -68,8 +68,7 @@ class AudioPlaybackService : LifecycleService() {
                     PendingIntent.getActivity(
                         applicationContext,
                         0,
-                        Intent(applicationContext, RadioActivity::class.java),
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                        Intent(applicationContext, RadioActivity::class.java), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                     )
 
                 override fun getCurrentContentText(player: Player): String {
@@ -212,7 +211,8 @@ class AudioPlaybackService : LifecycleService() {
     }
 
     private inner class PlayerEventListener : Player.Listener {
-        override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+
+        override fun onPlaybackStateChanged(playbackState: Int) {
             when (playbackState) {
                 Player.STATE_BUFFERING -> {
                     updateStreamInfoJob?.cancel()
@@ -237,14 +237,6 @@ class AudioPlaybackService : LifecycleService() {
                     status.value = PlayerState.Stopped
                 }
             }
-        }
-
-        override fun onPlaybackStateChanged(playbackState: Int) {
-            super.onPlaybackStateChanged(playbackState)
-        }
-
-        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-            super.onPlayWhenReadyChanged(playWhenReady, reason)
         }
 
         override fun onPlayerError(e: PlaybackException) {

@@ -5,7 +5,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.google.android.exoplayer2.Player
+import androidx.media3.common.Player
 import timber.log.Timber
 import ua.hope.radio.utils.SingleLiveEvent
 

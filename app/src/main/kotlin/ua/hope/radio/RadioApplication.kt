@@ -1,6 +1,6 @@
 package ua.hope.radio
 
-import androidx.multidex.MultiDexApplication
+import android.app.Application
 import com.google.firebase.analytics.FirebaseAnalytics
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -9,7 +9,7 @@ import timber.log.Timber
 import ua.hope.radio.player.PlayerViewModel
 import ua.hope.radio.utils.CrashlyticsCrashReportingTree
 
-class RadioApplication : MultiDexApplication() {
+class RadioApplication : Application() {
     private val koinModule = module {
         viewModel { PlayerViewModel() }
     }

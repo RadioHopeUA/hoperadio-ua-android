@@ -25,11 +25,10 @@ android {
 
     defaultConfig {
         applicationId = "ua.hope.radio"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 33
         versionCode = 16
         versionName = "1.2.0"
-        multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -108,8 +107,6 @@ dependencies {
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.media:media:1.6.0")
-    implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     val lifecycleVersion = "2.6.1"
@@ -127,14 +124,14 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-perf-ktx")
 
-    val okHttpVersion = "4.9.3"
+    val okHttpVersion = "4.10.0"
     implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
 
-    val exoPlayerVersion = "2.18.5"
-    implementation("com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion")
-    implementation("com.google.android.exoplayer:exoplayer-hls:$exoPlayerVersion")
-    implementation("com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion")
+    val media3Version = "1.0.0"
+    implementation("androidx.media3:media3-exoplayer:$media3Version")
+    implementation("androidx.media3:media3-exoplayer-hls:$media3Version")
+    implementation("androidx.media3:media3-ui:$media3Version")
 
     implementation("com.jakewharton.timber:timber:5.0.1")
 
