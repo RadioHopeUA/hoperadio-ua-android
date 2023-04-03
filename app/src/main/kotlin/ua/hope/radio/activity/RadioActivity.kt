@@ -37,13 +37,17 @@ open class RadioActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        playerViewModel.serviceStatus.observe(this, {
+        playerViewModel.serviceStatus.observe(this) {
             when (it) {
-                is ServiceState.Bind -> bindService(Intent(this, AudioPlaybackService::class.java), it.connection, Context.BIND_AUTO_CREATE)
+                is ServiceState.Bind -> bindService(
+                    Intent(this, AudioPlaybackService::class.java),
+                    it.connection,
+                    Context.BIND_AUTO_CREATE
+                )
                 is ServiceState.UnBind -> unbindService(it.connection)
             }
-        })
-        playerViewModel.playerStatus.observe(this, {
+        }
+        playerViewModel.playerStatus.observe(this) {
             binding.audioPrefIv.visibility = View.INVISIBLE
             binding.playerStatusTv.text = when (it) {
                 is PlayerState.Buffering -> getString(R.string.status_buffering)
@@ -62,11 +66,11 @@ open class RadioActivity : AppCompatActivity() {
                     getString(R.string.status_error)
                 }
             }
-        })
-        playerViewModel.streamInfo.observe(this, {
+        }
+        playerViewModel.streamInfo.observe(this) {
             binding.songNameTv.text = it.title
             binding.artistNameTv.text = it.artist
-        })
+        }
         binding.playerControlView.findViewById<ImageView>(R.id.exo_play).setOnClickListener {
             playerViewModel.play(getString(R.string.radio_stream_url))
         }

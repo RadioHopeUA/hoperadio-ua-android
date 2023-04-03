@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Binder
 import android.os.IBinder
-import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import com.google.android.exoplayer2.C
@@ -18,7 +17,7 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.TrackSelectionOverrides
+import com.google.android.exoplayer2.trackselection.TrackSelectionOverride
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import kotlinx.coroutines.CoroutineScope
@@ -48,12 +47,16 @@ class AudioPlaybackService : LifecycleService() {
         exoPlayer = ExoPlayer.Builder(this).build()
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
-            .setContentType(C.CONTENT_TYPE_MUSIC)
+            .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
             .build()
         exoPlayer.setAudioAttributes(audioAttributes, true)
         exoPlayer.addListener(PlayerEventListener())
 
-        playerNotificationManager = PlayerNotificationManager.Builder(applicationContext, NOTIFICATION_ID, NOTIFICATION_CHANNEL)
+        playerNotificationManager = PlayerNotificationManager.Builder(
+            applicationContext,
+            NOTIFICATION_ID,
+            NOTIFICATION_CHANNEL
+        )
             .setChannelDescriptionResourceId(R.string.audio_notification_channel_name)
             .setChannelNameResourceId(R.string.app_name)
             .setMediaDescriptionAdapter(object : PlayerNotificationManager.MediaDescriptionAdapter {
@@ -61,7 +64,6 @@ class AudioPlaybackService : LifecycleService() {
                     return trackInfo.value?.title ?: "..."
                 }
 
-                @Nullable
                 override fun createCurrentContentIntent(player: Player): PendingIntent? =
                     PendingIntent.getActivity(
                         applicationContext,
@@ -70,12 +72,10 @@ class AudioPlaybackService : LifecycleService() {
                         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                     )
 
-                @Nullable
                 override fun getCurrentContentText(player: Player): String {
                     return trackInfo.value?.artist ?: ""
                 }
 
-                @Nullable
                 override fun getCurrentLargeIcon(
                     player: Player,
                     callback: PlayerNotificationManager.BitmapCallback
@@ -84,7 +84,10 @@ class AudioPlaybackService : LifecycleService() {
                 }
             })
             .setNotificationListener(object : PlayerNotificationManager.NotificationListener {
-                override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
+                override fun onNotificationCancelled(
+                    notificationId: Int,
+                    dismissedByUser: Boolean
+                ) {
                     status.value = PlayerState.Stopped
                     exoPlayer.stop()
                     exoPlayer.clearMediaItems()
@@ -108,21 +111,21 @@ class AudioPlaybackService : LifecycleService() {
             })
             .setSmallIconResourceId(R.drawable.ic_stat_audio)
             .build()
-        .apply {
-            // Omit skip previous and next actions.
-            setUseNextAction(false)
-            setUsePreviousAction(false)
-            setUseNextActionInCompactView(false)
-            setUsePreviousActionInCompactView(false)
-            // Omit stop action.
-            setUseStopAction(false)
-            setUseRewindAction(false)
-            setUseFastForwardAction(false)
+            .apply {
+                // Omit skip previous and next actions.
+                setUseNextAction(false)
+                setUsePreviousAction(false)
+                setUseNextActionInCompactView(false)
+                setUsePreviousActionInCompactView(false)
+                // Omit stop action.
+                setUseStopAction(false)
+                setUseRewindAction(false)
+                setUseFastForwardAction(false)
 
-            setColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
+                setColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
 
-            setPlayer(exoPlayer)
-        }
+                setPlayer(exoPlayer)
+            }
     }
 
     override fun onDestroy() {
@@ -158,7 +161,10 @@ class AudioPlaybackService : LifecycleService() {
     fun getTracksMetadata(): TracksMetadata {
         tracksMetadata.tracks.clear()
         tracksMetadata.tracks[TracksMetadata.ADAPTIVE] = 0
-        val group = (exoPlayer.trackSelector as DefaultTrackSelector).currentMappedTrackInfo?.getTrackGroups(RENDER_IDX)
+        val group =
+            (exoPlayer.trackSelector as DefaultTrackSelector).currentMappedTrackInfo?.getTrackGroups(
+                RENDER_IDX
+            )
         if (group != null) {
             val len = group[TRACK_GROUP_IDX].length
             for (index in 0 until len) {
@@ -175,35 +181,34 @@ class AudioPlaybackService : LifecycleService() {
         val groups = trackSelector.currentMappedTrackInfo?.getTrackGroups(RENDER_IDX)
         if (groups != null) {
             val builder = trackSelector.buildUponParameters()
-            builder.setTrackSelectionOverrides(TrackSelectionOverrides.EMPTY)
+            builder.clearOverrides()
             if (trackId != TracksMetadata.ADAPTIVE) {
-                val overrides = TrackSelectionOverrides.Builder()
-                    .addOverride(TrackSelectionOverrides.TrackSelectionOverride(groups.get(TRACK_GROUP_IDX), listOf(trackId)))
-                    .build()
-                builder.setTrackSelectionOverrides(overrides)
+                val overrides = TrackSelectionOverride(groups.get(TRACK_GROUP_IDX), trackId)
+                builder.addOverride(overrides)
                 trackSelector.parameters = builder.build()
             }
         }
     }
 
     private fun startStreamInfoJob() {
-        updateStreamInfoJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(5.seconds.inWholeMilliseconds) {
-            Timber.d("Getting track info")
-            try {
-                val request = Request.Builder()
-                    .url(getString(R.string.radio_info_url))
-                    .build()
-                val response = okHttpClient.newCall(request).execute()
-                val info = response.body?.string()
-                if (info != null) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        trackInfo.value = StreamInfo.from(info)
+        updateStreamInfoJob =
+            CoroutineScope(Dispatchers.IO).launchPeriodicAsync(5.seconds.inWholeMilliseconds) {
+                Timber.d("Getting track info")
+                try {
+                    val request = Request.Builder()
+                        .url(getString(R.string.radio_info_url))
+                        .build()
+                    val response = okHttpClient.newCall(request).execute()
+                    val info = response.body?.string()
+                    if (info != null) {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            trackInfo.value = StreamInfo.from(info)
+                        }
                     }
+                } catch (t: Throwable) {
+                    Timber.e(t, "Unable to get track info")
                 }
-            } catch (t: Throwable) {
-                Timber.e(t, "Unable to get track info")
             }
-        }
     }
 
     private inner class PlayerEventListener : Player.Listener {
@@ -232,6 +237,14 @@ class AudioPlaybackService : LifecycleService() {
                     status.value = PlayerState.Stopped
                 }
             }
+        }
+
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            super.onPlaybackStateChanged(playbackState)
+        }
+
+        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+            super.onPlayWhenReadyChanged(playWhenReady, reason)
         }
 
         override fun onPlayerError(e: PlaybackException) {

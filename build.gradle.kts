@@ -6,16 +6,16 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.4")
-        classpath(kotlin("gradle-plugin", version = "1.6.10"))
-        classpath("com.google.gms:google-services:4.3.10")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.8.1")
+        classpath("com.android.tools.build:gradle:7.4.2")
+        classpath(kotlin("gradle-plugin", version = "1.8.20"))
+        classpath("com.google.gms:google-services:4.3.15")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.4")
     }
 }
 
 plugins {
     // https://github.com/ben-manes/gradle-versions-plugin
-    id("com.github.ben-manes.versions") version "0.41.0"
+    id("com.github.ben-manes.versions") version "0.46.0"
 }
 
 allprojects {

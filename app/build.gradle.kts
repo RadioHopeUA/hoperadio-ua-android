@@ -19,13 +19,14 @@ tasks.withType<KotlinCompile> {
 }
 
 android {
-    compileSdk = 31
-    buildToolsVersion = "31.0.0"
+    compileSdk = 33
+    buildToolsVersion = "33.0.2"
+    namespace = "ua.hope.radio"
 
     defaultConfig {
         applicationId = "ua.hope.radio"
         minSdk = 21
-        targetSdk = 31
+        targetSdk = 33
         versionCode = 16
         versionName = "1.2.0"
         multiDexEnabled = true
@@ -102,25 +103,26 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("androidx.media:media:1.4.3")
+    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.media:media:1.6.0")
     implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
-    val lifecycleVersion = "2.4.0"
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    val lifecycleVersion = "2.6.1"
     implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
 
-    val coroutinesVersion = "1.6.0"
+    val coroutinesVersion = "1.6.4"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
-    implementation(platform("com.google.firebase:firebase-bom:29.0.3"))
+    implementation(platform("com.google.firebase:firebase-bom:31.4.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-perf-ktx")
@@ -129,20 +131,20 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
 
-    val exoPlayerVersion = "2.16.1"
+    val exoPlayerVersion = "2.18.5"
     implementation("com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion")
     implementation("com.google.android.exoplayer:exoplayer-hls:$exoPlayerVersion")
     implementation("com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion")
 
     implementation("com.jakewharton.timber:timber:5.0.1")
 
-    val koinVersion = "3.1.5"
+    val koinVersion = "3.4.0"
     implementation("io.insert-koin:koin-core:$koinVersion")
     implementation("io.insert-koin:koin-android:$koinVersion")
 
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
 
 fun loadSigningConfig(propertiesPath: String, config: ApkSigningConfig) {
