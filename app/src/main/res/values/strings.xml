@@ -14,5 +14,5 @@
     <string name="status_buffering">Buffering …</string>
     <string name="status_error">Error</string>
     <string name="audio_notification_channel_name" translatable="false">Channel ID for Radio</string>
-    <string name="copyright_capture">© 2016–2021 Hope Media Group UA</string>
+    <string name="copyright_capture">© 2016–2023 Hope Media Group UA</string>
 </resources>
