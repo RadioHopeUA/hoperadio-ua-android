@@ -27,8 +27,8 @@ android {
         applicationId = "ua.hope.radio"
         minSdk = 23
         targetSdk = 33
-        versionCode = 16
-        versionName = "1.2.0"
+        versionCode = 17
+        versionName = "1.2.1"
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
