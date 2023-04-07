@@ -2,18 +2,19 @@ package ua.hope.radio.player
 
 import timber.log.Timber
 
-data class StreamInfo(val title: String, val artist: String) {
+data class StreamInfo(val artist: String, val title: String) {
     companion object {
         fun from(info: String): StreamInfo {
-            val splitted = info.split(" - ")
-            return if (splitted.size >= 2) {
-                StreamInfo(splitted[1], splitted[0])
-            } else {
-                Timber.e("Unable to parse stream info: $info")
+            val delimiterIdx = info.indexOf(DELIMITER)
+            return if (delimiterIdx == -1) {
+                Timber.e("Unable to parse stream info: \"$info\"")
                 StreamInfo(info, "")
+            } else {
+                return StreamInfo(info.substring(0 until delimiterIdx), info.substring(delimiterIdx + DELIMITER.length until info.length))
             }
         }
 
         val EMPTY = StreamInfo("", "")
+        private const val DELIMITER = " - "
     }
 }
