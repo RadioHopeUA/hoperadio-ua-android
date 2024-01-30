@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.ResolveInfoFlags
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -28,7 +29,6 @@ import ua.hope.radio.player.PlayerState
 import ua.hope.radio.player.PlayerViewModel
 import ua.hope.radio.player.ServiceState
 import ua.hope.radio.player.TracksMetadata
-
 
 /**
  * Created by vitalii on 8/7/17.
@@ -78,7 +78,7 @@ class RadioActivity : AppCompatActivity() {
             binding.songNameTv.text = it.title
             binding.artistNameTv.text = it.artist
         }
-        binding.playerControlView.findViewById<ImageView>(R.id.exo_play).setOnClickListener {
+        binding.playerControlView.findViewById<ImageView>(androidx.media3.ui.R.id.exo_play).setOnClickListener {
             playerViewModel.play(getString(R.string.radio_stream_url))
         }
 
@@ -120,7 +120,13 @@ class RadioActivity : AppCompatActivity() {
                         intent.action = Intent.ACTION_VIEW
                         intent.data = Uri.parse(url)
                     }
-                    if (packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+
+                    val openWith = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        packageManager.resolveActivity(intent, ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong()))
+                    } else {
+                        packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                    }
+                    if (openWith != null) {
                         startActivity(intent)
                     }
                 }

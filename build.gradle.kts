@@ -7,16 +7,16 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.4.2")
-        classpath(kotlin("gradle-plugin", version = "1.8.20"))
-        classpath("com.google.gms:google-services:4.3.15")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.4")
+        classpath("com.android.tools.build:gradle:8.2.2")
+        classpath(kotlin("gradle-plugin", version = "1.9.22"))
+        classpath("com.google.gms:google-services:4.4.0")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.9")
     }
 }
 
 plugins {
     // https://github.com/ben-manes/gradle-versions-plugin
-    id("com.github.ben-manes.versions") version "0.46.0"
+    id("com.github.ben-manes.versions") version "0.51.0"
 }
 
 allprojects {
@@ -28,7 +28,7 @@ allprojects {
 
 tasks {
     val clean by registering(Delete::class) {
-        delete(buildDir)
+        delete(layout.buildDirectory)
     }
 
     named("dependencyUpdates", DependencyUpdatesTask::class.java).configure {

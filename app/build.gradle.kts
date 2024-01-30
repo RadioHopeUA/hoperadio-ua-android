@@ -7,7 +7,6 @@ import kotlin.collections.mutableMapOf
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 }
@@ -19,14 +18,14 @@ tasks.withType<KotlinCompile> {
 }
 
 android {
-    compileSdk = 33
-    buildToolsVersion = "33.0.2"
+    compileSdk = 34
+    buildToolsVersion = "34.0.0"
     namespace = "ua.hope.radio"
 
     defaultConfig {
         applicationId = "ua.hope.radio"
         minSdk = 23
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 18
         versionName = "1.2.2"
         vectorDrawables.useSupportLibrary = true
@@ -81,7 +80,7 @@ android {
         viewBinding = true
     }
 
-    packagingOptions {
+    packaging {
         resources.excludes.add("META-INF/*")
     }
 
@@ -113,49 +112,48 @@ tasks.withType<Test> {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation("androidx.core:core-ktx:1.10.0")
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
-    val lifecycleVersion = "2.6.1"
+    val lifecycleVersion = "2.7.0"
     implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
 
-    val coroutinesVersion = "1.6.4"
+    val coroutinesVersion = "1.7.3"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
-    implementation(platform("com.google.firebase:firebase-bom:31.4.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-perf-ktx")
 
-    val okHttpVersion = "4.10.0"
-    implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
-    implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
+    api(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
 
-    val media3Version = "1.0.0"
+    val media3Version = "1.2.1"
     implementation("androidx.media3:media3-exoplayer:$media3Version")
     implementation("androidx.media3:media3-exoplayer-hls:$media3Version")
     implementation("androidx.media3:media3-ui:$media3Version")
 
     implementation("com.jakewharton.timber:timber:5.0.1")
 
-    val koinVersion = "3.4.0"
+    val koinVersion = "3.5.3"
     implementation("io.insert-koin:koin-core:$koinVersion")
     implementation("io.insert-koin:koin-android:$koinVersion")
 
     // Dependencies for local unit tests
-    val junitVersion = "5.9.2"
+    val junitVersion = "5.10.1"
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-    testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation("io.mockk:mockk:1.13.9")
 
     // Dependencies for Android tests
     androidTestImplementation("androidx.test:core:1.5.0")

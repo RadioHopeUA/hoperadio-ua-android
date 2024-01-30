@@ -3,9 +3,11 @@ package ua.hope.radio.player
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
 import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat
@@ -101,7 +103,15 @@ class AudioPlaybackService : LifecycleService() {
                 ) {
                     if (ongoing) {
                         // Make sure the service will not get destroyed while playing media.
-                        startForeground(notificationId, notification)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            startForeground(
+                                notificationId,
+                                notification,
+                                ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+                            )
+                        } else {
+                            startForeground(notificationId, notification)
+                        }
                     } else {
                         // Make notification cancellable.
                         stopForeground(false)
