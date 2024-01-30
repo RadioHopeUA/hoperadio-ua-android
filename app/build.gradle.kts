@@ -26,8 +26,8 @@ android {
         applicationId = "ua.hope.radio"
         minSdk = 23
         targetSdk = 34
-        versionCode = 18
-        versionName = "1.2.2"
+        versionCode = 19
+        versionName = "1.2.3"
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -78,6 +78,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     packaging {
