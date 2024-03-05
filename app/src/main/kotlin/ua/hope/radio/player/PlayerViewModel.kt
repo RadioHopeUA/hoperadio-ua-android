@@ -70,10 +70,10 @@ class PlayerViewModel : ViewModel() {
 }
 
 sealed interface PlayerState {
-    object Buffering : PlayerState
+    data object Buffering : PlayerState
     class Playing(val player: Player) : PlayerState
-    object Stopped : PlayerState
-    object Error : PlayerState
+    data object Stopped : PlayerState
+    data object Error : PlayerState
 }
 
 sealed interface ServiceState {
